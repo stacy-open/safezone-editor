@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeZone Editor - Open Partners</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="https://open.partners/wp-content/uploads/2022/12/OP-Main-Logo.svg" alt="Open Partners Logo" class="header-logo">
+        <h1>SafeZone Editor</h1>
+    </header>
+
+    <div id="container">
+        <aside id="sidebar">
+            <h2>Editor Controls</h2>
+            
+            <label for="platform-select">1. Select Platform:</label>
+            <select id="platform-select">
+                <option value="none">-- Select Platform --</option>
+                <option value="meta">Meta</option>
+                <option value="tiktok">TikTok</option>
+                <option value="youtube">YouTube</option>
+            </select>
+
+            <label for="format-select">2. Select Format:</label>
+            <select id="format-select" disabled>
+                <option value="none">-- Select Format --</option>
+            </select>
+            
+            <hr>
+
+            <label for="image-upload">3. Upload Your Image:</label>
+            <input type="file" id="image-upload" accept="image/*">
+            <p class="hint">Upload an image to see the safe zones.</p>
+        </aside>
+
+        <main id="editor-area">
+            <div id="image-frame">
+                <img id="user-image" src="#" alt="Uploaded Image Preview" style="display: none;">
+                
+                <img id="safezone-overlay" src="" alt="Safe Zone Overlay" style="display: none;">
+            </div>
+            <p id="message">Select a platform/format and upload an image to begin.</p>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Open Partners. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+/* ------------------------------------------- */
+/* --- 1. GLOBAL STYLES & BRANDING (POPPINS/GOLD) --- */
+/* ------------------------------------------- */
+:root {
+    /* Main brand accent color (Vibrant Gold/Yellow from Open Partners) */
+    --brand-primary: #FFC600; 
+    /* Deep Navy/Black for headings and main text */
+    --text-primary: #000000; 
+    /* Light grey background for sidebar/separator */
+    --brand-secondary-bg: #f7f7f7; 
+    /* Lighter grey for borders */
+    --border-color: #e0e0e0;
+}
+
+body {
+    /* Apply Poppins font family across the site */
+    font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; 
+    background-color: #FFFFFF; /* Clean white background */
+    margin: 0;
+    padding: 0;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* --- Header & Branding --- */
+header {
+    background-color: var(--text-primary); /* Dark Navy header for high contrast */
+    color: white;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.header-logo {
+    /* Styles for the Open Partners SVG logo */
+    width: 150px; 
+    height: auto;
+    display: block;
+    margin: 0 auto 10px auto; 
+}
+
+h1 {
+    font-weight: 800; /* Extra bold/heavy look for the title */
+    margin: 0;
+    font-size: 1.8em; 
+}
+
+h2 {
+    color: var(--brand-primary); /* GOLD color for section headers */
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.1em;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: 30px 0;
+}
+
+/* ------------------------------------------- */
+/* --- 2. LAYOUT (FLEXBOX CONTAINER) --- */
+/* ------------------------------------------- */
+#container {
+    display: flex;
+    max-width: 1400px;
+    margin: 40px auto;
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    min-height: 75vh;
+    overflow: hidden; 
+}
+
+#sidebar {
+    width: 380px;
+    padding: 35px;
+    border-right: 1px solid var(--border-color);
+    background-color: var(--brand-secondary-bg); /* Light grey sidebar */
+}
+
+#editor-area {
+    flex-grow: 1;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ------------------------------------------- */
+/* --- 3. FORM ELEMENTS --- */
+/* ------------------------------------------- */
+label {
+    display: block;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+select, input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    background-color: white;
+}
+
+select:focus, input[type="file"]:focus {
+    /* Highlight focus with the gold accent color */
+    border-color: var(--brand-primary); 
+    box-shadow: 0 0 0 2px rgba(255, 198, 0, 0.3);
+    outline: none;
+}
+
+.hint {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+/* ------------------------------------------- */
+/* --- 4. PREVIEW STACKING (THE CORE LOGIC) --- */
+/* ------------------------------------------- */
+#image-frame {
+    /* The stacking container for the image and overlay */
+    position: relative; 
+    width: 90%; 
+    max-width: 750px; 
+    aspect-ratio: 1/1; /* Default ratio, JavaScript changes this */
+    border: 3px solid var(--border-color);
+    background-color: #fcfcfc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+#user-image, #safezone-overlay {
+    /* Positions both images relative to #image-frame */
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures image fits without cropping */
+}
+
+#safezone-overlay {
+    z-index: 10; /* Ensures the overlay is on top */
+    pointer-events: none; /* Allows user interaction (clicks/scrolling) to pass through */
+}
+
+/* Message when no image/selection is made */
+#message {
+    font-size: 1.2em;
+    color: var(--brand-primary); /* GOLD message color */
+    font-weight: 500;
+    padding: 30px;
+}
+
+/* ------------------------------------------- */
+/* --- 5. FOOTER --- */
+/* ------------------------------------------- */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    font-size: 0.85em;
+    color: #999;
+}
