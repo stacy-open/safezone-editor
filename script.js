@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const platformSelect = document.getElementById('platform-select');
+    // UPDATED: platformSelect is now platformChips
+    const platformChips = document.getElementById('platform-chips');
     const formatSelect = document.getElementById('format-select');
     const imageUpload = document.getElementById('image-upload');
     const userImage = document.getElementById('user-image');
@@ -7,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageFrame = document.getElementById('image-frame');
     const message = document.getElementById('message');
 
-    // ** 1. DEFINE OVERLAY MAPPING (CRITICAL: CUSTOMIZE FILE NAMES HERE!) **
+    // ** 1. DEFINE OVERLAY MAPPING (UNCHANGED) **
     const OVERLAYS = {
         'meta': { // Internal Platform Key
             'post-1x1': { file: 'meta_feed_1x1.png', ratio: '1/1' },
@@ -25,45 +26,58 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     };
 
-    // ** 2. DEFINE USER-FRIENDLY NAMES (For Display in the Dropdown) **
+    // ** 2. DEFINE USER-FRIENDLY NAMES (UNCHANGED) **
     const FORMAT_NAMES = {
-        'post-1x1': '1x1 Meta Post',
-        'post-4x5': '4x5 Meta Post',
-        'reel-9x16': 'Meta Reel',
-        'story-9x16': 'Meta Story',
-        'feed-9x16': 'TikTok Post',
-        'feed-1x1': 'YouTube Post',
-        'in-stream-16x9': 'YouTube In-Stream',
-        'shorts-9x16': 'YouTube Short',
+        'post-1x1': '1x1 Feed Post', // Changed Meta Post to Feed Post for generality
+        'post-4x5': '4x5 Feed Post',
+        'reel-9x16': '9x16 Reel',
+        'story-9x16': '9x16 Story',
+        'feed-9x16': '9x16 Feed',
+        'feed-1x1': '1x1 Post',
+        'in-stream-16x9': '16x9 In-Stream',
+        'shorts-9x16': '9x16 Short',
     };
 
     let currentPlatform = null;
     let currentFormat = null;
     let imageLoaded = false;
 
-    // Helper function to reset the editor state (unchanged from original)
+    // Helper function to reset the editor state
     function resetEditor() {
         safezoneOverlay.style.display = 'none';
         userImage.style.display = imageLoaded ? 'block' : 'none';
         imageFrame.style.aspectRatio = '1/1';
         message.textContent = "Please select a platform and format.";
         message.style.display = 'block';
+        // Deselect all chips on full reset
+        document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
     }
 
     // --- Event Handlers ---
+    
+    // 2. Handle Platform Selection (Now handled by click event on the chip container)
+    platformChips.addEventListener('click', (e) => {
+        const target = e.target.closest('.platform-chip');
+        if (!target) return; // Not a chip button
 
-    // 2. Handle Platform Selection
-    platformSelect.addEventListener('change', (e) => {
-        currentPlatform = e.target.value;
+        const platformKey = target.dataset.platform;
+        
+        // 1. Update active state on buttons
+        document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
+        target.classList.add('selected');
+
+        // 2. Set the current platform
+        currentPlatform = platformKey;
+        
+        // 3. Clear and populate the format selector
         formatSelect.innerHTML = '<option value="none">-- Select Format --</option>'; // Reset formats
         
-        if (currentPlatform && currentPlatform !== 'none' && OVERLAYS[currentPlatform]) {
+        if (platformKey && OVERLAYS[platformKey]) {
             formatSelect.disabled = false;
-            // Populate the format dropdown using the user-friendly FORMAT_NAMES
-            for (const formatKey in OVERLAYS[currentPlatform]) {
+            for (const formatKey in OVERLAYS[platformKey]) {
                 const option = document.createElement('option');
                 option.value = formatKey;
-                option.textContent = FORMAT_NAMES[formatKey] || formatKey; // Use user-friendly name, fallback to key
+                option.textContent = FORMAT_NAMES[formatKey] || formatKey;
                 formatSelect.appendChild(option);
             }
         } else {
@@ -71,8 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
             currentFormat = null;
             resetEditor();
         }
+        
+        // Always reset format to none when switching platforms
+        formatSelect.value = 'none'; 
+        updatePreview();
     });
-
+    
     // 3. Handle Format Selection (unchanged)
     formatSelect.addEventListener('change', (e) => {
         currentFormat = e.target.value;
@@ -97,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 5. Main Preview Update Logic (unchanged logic, but uses new keys)
+    // 5. Main Preview Update Logic (unchanged)
     function updatePreview() {
         if (!imageLoaded) {
             userImage.style.display = 'none';
