@@ -1,25 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // UPDATED: platformSelect is now platformChips
+    // DOM Elements
     const platformChips = document.getElementById('platform-chips');
     const formatSelect = document.getElementById('format-select');
     const imageUpload = document.getElementById('image-upload');
     const userImage = document.getElementById('user-image');
     const safezoneOverlay = document.getElementById('safezone-overlay');
     const imageFrame = document.getElementById('image-frame');
-    const message = document.getElementById('message');
+    const resetButton = document.getElementById('reset-button');
+    const initialPlaceholder = document.getElementById('initial-placeholder');
+    const fileStatusText = document.getElementById('file-status');
+    
+    // Internal State
+    let currentPlatform = null;
+    let currentFormat = null;
+    let imageLoaded = false;
 
     // ** 1. DEFINE OVERLAY MAPPING (UNCHANGED) **
     const OVERLAYS = {
-        'meta': { // Internal Platform Key
+        'meta': { 
             'post-1x1': { file: 'meta_feed_1x1.png', ratio: '1/1' },
             'post-4x5': { file: 'meta_feed_4x5.png', ratio: '4/5' },
             'reel-9x16': { file: 'meta_reels_9x16.png', ratio: '9/16' },
             'story-9x16': { file: 'meta_story_9x16.png', ratio: '9/16' },
         },
-        'tiktok': { // Internal Platform Key
+        'tiktok': { 
             'feed-9x16': { file: 'tiktok_feed_9x16.png', ratio: '9/16' },
         },
-        'youtube': { // Internal Platform Key
+        'youtube': { 
             'feed-1x1': { file: 'yt_feed_1x1.png', ratio: '1/1' },
             'in-stream-16x9': { file: 'yt_instream_16x9.png', ratio: '16/9' },
             'shorts-9x16': { file: 'yt_shorts_9x16.png', ratio: '9/16' },
@@ -38,90 +45,45 @@ document.addEventListener('DOMContentLoaded', () => {
         'shorts-9x16': '9x16 Short',
     };
 
-    let currentPlatform = null;
-    let currentFormat = null;
-    let imageLoaded = false;
+    // --- Core Functions ---
 
-    // Helper function to reset the editor state
-    function resetEditor() {
-        safezoneOverlay.style.display = 'none';
-        userImage.style.display = imageLoaded ? 'block' : 'none';
-        imageFrame.style.aspectRatio = '1/1';
-        message.textContent = "Please select a platform and format.";
-        message.style.display = 'block';
-        document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
+    function updateFileStatus(fileName = null) {
+        if (fileName) {
+            fileStatusText.textContent = fileName;
+            fileStatusText.style.color = 'var(--brand-primary)';
+        } else {
+            fileStatusText.textContent = 'Upload an image to preview safe zones.';
+            fileStatusText.style.color = 'var(--color-text-muted)';
+        }
     }
 
-    // --- Event Handlers ---
-    
-    // 2. Handle Platform Selection (Now handled by click event on the chip container)
-    platformChips.addEventListener('click', (e) => {
-        const target = e.target.closest('.platform-chip');
-        if (!target) return; // Not a chip button
-        
-        // ** THE CRITICAL FIX: STOP THE BUTTON'S DEFAULT ACTION (e.g., submitting a form) **
-        e.preventDefault(); 
+    function resetEditor() {
+        // Clear variables
+        currentPlatform = null;
+        currentFormat = null;
+        imageLoaded = false;
 
-        const platformKey = target.dataset.platform;
+        // Clear UI elements
+        userImage.src = '#';
+        userImage.style.display = 'none';
+        safezoneOverlay.style.display = 'none';
         
-        // 1. Update active state on buttons
+        // Reset controls
+        formatSelect.innerHTML = '<option value="none">Choose a format...</option>';
+        formatSelect.disabled = true;
         document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
-        target.classList.add('selected');
+        imageUpload.value = ''; // Clears the file input field
 
-        // 2. Set the current platform
-        currentPlatform = platformKey;
-        
-        // 3. Clear and populate the format selector
-        formatSelect.innerHTML = '<option value="none">-- Select Format --</option>'; // Reset formats
-        
-        if (platformKey && OVERLAYS[platformKey]) {
-            formatSelect.disabled = false; // <--- This line is now guaranteed to run
-            for (const formatKey in OVERLAYS[platformKey]) {
-                const option = document.createElement('option');
-                option.value = formatKey;
-                option.textContent = FORMAT_NAMES[formatKey] || formatKey;
-                formatSelect.appendChild(option);
-            }
-        } else {
-            formatSelect.disabled = true;
-            currentFormat = null;
-            resetEditor();
-        }
-        
-        // Always reset format to none when switching platforms
-        formatSelect.value = 'none'; 
-        updatePreview();
-    });
-    
-    // 3. Handle Format Selection (unchanged)
-    formatSelect.addEventListener('change', (e) => {
-        currentFormat = e.target.value;
-        updatePreview();
-    });
+        // Reset preview
+        imageFrame.style.aspectRatio = '1/1';
+        initialPlaceholder.style.display = 'block';
+        updateFileStatus();
+    }
 
-    // 4. Handle Image Upload (unchanged)
-    imageUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                userImage.src = event.target.result;
-                imageLoaded = true;
-                updatePreview();
-            };
-            reader.readAsDataURL(file);
-        } else {
-            imageLoaded = false;
-            userImage.src = '#';
-            resetEditor();
-        }
-    });
-
-    // 5. Main Preview Update Logic (unchanged)
     function updatePreview() {
         if (!imageLoaded) {
             userImage.style.display = 'none';
-            message.textContent = "Upload an image to start editing.";
+            initialPlaceholder.style.display = 'block';
             return;
         }
 
@@ -132,10 +94,82 @@ document.addEventListener('DOMContentLoaded', () => {
             safezoneOverlay.src = `overlays/${overlayData.file}`;
             safezoneOverlay.style.display = 'block';
             userImage.style.display = 'block';
-            message.style.display = 'none';
+            initialPlaceholder.style.display = 'none'; // Hide placeholder once working
 
         } else {
-            resetEditor();
+            // Image is loaded, but platform/format is missing
+            safezoneOverlay.style.display = 'none';
+            initialPlaceholder.style.display = 'none';
+            userImage.style.display = 'block'; // Show uploaded image without overlay
         }
     }
+
+    // --- Event Listeners ---
+
+    // Platform Selection (Chip Buttons)
+    platformChips.addEventListener('click', (e) => {
+        const target = e.target.closest('.platform-chip');
+        if (!target) return;
+        
+        e.preventDefault(); 
+        
+        const platformKey = target.dataset.platform;
+        
+        // Update active state on buttons
+        document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
+        target.classList.add('selected');
+
+        currentPlatform = platformKey;
+        
+        // Clear and populate the format selector
+        formatSelect.innerHTML = '<option value="none">Choose a format...</option>';
+        formatSelect.value = 'none'; 
+        currentFormat = 'none'; // Reset current format
+
+        if (platformKey && OVERLAYS[platformKey]) {
+            formatSelect.disabled = false;
+            for (const formatKey in OVERLAYS[platformKey]) {
+                const option = document.createElement('option');
+                option.value = formatKey;
+                option.textContent = FORMAT_NAMES[formatKey] || formatKey;
+                formatSelect.appendChild(option);
+            }
+        } else {
+            formatSelect.disabled = true;
+        }
+        
+        updatePreview();
+    });
+    
+    // Format Selection (Dropdown)
+    formatSelect.addEventListener('change', (e) => {
+        currentFormat = e.target.value;
+        updatePreview();
+    });
+
+    // Image Upload
+    imageUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                userImage.src = event.target.result;
+                imageLoaded = true;
+                updateFileStatus(file.name);
+                updatePreview();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imageLoaded = false;
+            userImage.src = '#';
+            updateFileStatus();
+            updatePreview();
+        }
+    });
+    
+    // Reset Button
+    resetButton.addEventListener('click', resetEditor);
+
+    // Initialize state
+    resetEditor();
 });
