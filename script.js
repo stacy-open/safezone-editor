@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentFormat = null;
     let imageLoaded = false;
 
-    // ** 1. DEFINE OVERLAY MAPPING (UNCHANGED) **
+    // ** 1. DEFINE OVERLAY MAPPING (CRITICAL: CUSTOMIZE FILE NAMES HERE!) **
     const OVERLAYS = {
         'meta': { 
             'post-1x1': { file: 'meta_feed_1x1.png', ratio: '1/1' },
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     };
 
-    // ** 2. DEFINE USER-FRIENDLY NAMES (UNCHANGED) **
+    // ** 2. DEFINE USER-FRIENDLY NAMES **
     const FORMAT_NAMES = {
         'post-1x1': '1x1 Feed Post',
         'post-4x5': '4x5 Feed Post',
@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Core Functions ---
 
+    /**
+     * Updates the text next to the upload button to show file name or default status.
+     */
     function updateFileStatus(fileName = null) {
         if (fileName && fileName !== 'No file selected.') {
             fileStatusText.textContent = fileName;
@@ -75,16 +78,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
         formatSelect.innerHTML = '<option value="none">Choose a format...</option>';
         formatSelect.disabled = true;
-        imageUpload.value = ''; // Clears the file input field
-        updateFileStatus(); // Resets the status text
+        
+        // Clears the file input field and resets the status text
+        imageUpload.value = ''; 
+        updateFileStatus(); 
 
         // 4. Reset Preview to Placeholder
         imageFrame.style.aspectRatio = '1/1';
         initialPlaceholder.style.display = 'block';
     }
 
+    /**
+     * Updates the preview based on current state (image, platform, format).
+     */
     function updatePreview() {
         if (!imageLoaded) {
+            // No image uploaded: show placeholder
             userImage.style.display = 'none';
             safezoneOverlay.style.display = 'none';
             initialPlaceholder.style.display = 'block';
@@ -92,21 +101,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (currentPlatform && currentFormat && currentFormat !== 'none') {
+            // Fully ready: Show image with overlay
             const overlayData = OVERLAYS[currentPlatform][currentFormat];
             
             imageFrame.style.aspectRatio = overlayData.ratio;
             safezoneOverlay.src = `overlays/${overlayData.file}`;
             
-            // Show all elements required for a preview
             safezoneOverlay.style.display = 'block';
             userImage.style.display = 'block';
             initialPlaceholder.style.display = 'none'; 
 
         } else {
-            // Image is loaded, but platform/format is missing or reset
+            // Image is loaded, but platform/format is missing
             safezoneOverlay.style.display = 'none';
             userImage.style.display = 'block';
-            // Show placeholder to guide user to select a format
+            // Show placeholder to prompt user to select a format
             initialPlaceholder.style.display = 'block'; 
         }
     }
@@ -118,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = e.target.closest('.platform-chip');
         if (!target) return;
         
-        e.preventDefault(); 
+        e.preventDefault(); // Prevents button's default action
         
         const platformKey = target.dataset.platform;
         
