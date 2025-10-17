@@ -93,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function updatePreview() {
         if (!imageLoaded) {
-            // No image uploaded: show placeholder
             userImage.style.display = 'none';
             safezoneOverlay.style.display = 'none';
             initialPlaceholder.style.display = 'block';
@@ -127,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = e.target.closest('.platform-chip');
         if (!target) return;
         
-        e.preventDefault(); // Prevents button's default action
+        e.preventDefault();
         
         const platformKey = target.dataset.platform;
         
