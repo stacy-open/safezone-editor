@@ -12,52 +12,56 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <img src="https://open.partners/wp-content/uploads/2022/12/OP-Main-Logo.svg" alt="Open Partners Logo" class="header-logo">
-        <h1>SafeZone Checker</h1>
-    </header>
+    <div id="wrapper">
+        <header>
+            <img src="https://open.partners/wp-content/uploads/2022/12/OP-Main-Logo.svg" alt="Open Partners Logo" class="header-logo">
+            <h1>SafeZone Checker</h1>
+        </header>
 
-    <div id="container">
-        <aside id="sidebar">
-            <h2>Safezone Checker Options</h2>
-            
-            <label>1. Select Your Platform:</label>
-            <div id="platform-chips" class="chip-container">
-                <button class="platform-chip" data-platform="meta">Meta</button>
-                <button class="platform-chip" data-platform="tiktok">TikTok</button>
-                <button class="platform-chip" data-platform="youtube">YouTube</button>
+        <div id="page-content">
+            <div id="container">
+                <aside id="sidebar">
+                    <h2>Options</h2>
+                    
+                    <label>1. Select Your Platform:</label>
+                    <div id="platform-chips" class="chip-container">
+                        <button class="platform-chip" data-platform="meta">Meta</button>
+                        <button class="platform-chip" data-platform="tiktok">TikTok</button>
+                        <button class="platform-chip" data-platform="youtube">YouTube</button>
+                    </div>
+
+                    <label for="format-select">2. Select Your Format:</label>
+                    <select id="format-select" disabled>
+                        <option value="none">Choose a format...</option>
+                    </select>
+                    
+                    <hr>
+
+                    <label>3. Upload Your Design:</label>
+                    <div class="upload-container">
+                        <label for="image-upload" class="custom-upload-button">Browse...</label> 
+                        
+                        <input type="file" id="image-upload" accept="image/*">
+                        
+                        <p id="file-status" class="hint file-truncate">No file selected.</p>
+                    </div>
+                    
+                    <button id="reset-button" class="reset-button">Reset Editor</button>
+                </aside>
+
+                <main id="editor-area">
+                    <div id="image-frame">
+                        <img id="user-image" src="#" alt="Uploaded Image Preview" style="display: none;">
+                        <img id="safezone-overlay" src="" alt="Safe Zone Overlay" style="display: none;">
+                        
+                        <div id="initial-placeholder">
+                            <p>Welcome to Open Partners SafeZone Checker!</p>
+                            <p class="small-text">Select a platform and format to get started.</p>
+                        </div>
+                    </div>
+                </main>
             </div>
-
-            <label for="format-select">2. Select Your Format:</label>
-            <select id="format-select" disabled>
-                <option value="none">Choose a format...</option>
-            </select>
-            
-            <hr>
-
-            <label>3. Upload Your Design:</label>
-            <div class="upload-container">
-                <label for="image-upload" class="custom-upload-button">Browse...</label> 
-                
-                <input type="file" id="image-upload" accept="image/*">
-                
-                <p id="file-status" class="hint">No file selected.</p>
-            </div>
-            
-            <button id="reset-button" class="reset-button">Reset Editor</button>
-        </aside>
-
-        <main id="editor-area">
-            <div id="image-frame">
-                <img id="user-image" src="#" alt="Uploaded Image Preview" style="display: none;">
-                <img id="safezone-overlay" src="" alt="Safe Zone Overlay" style="display: none;">
-                
-                <div id="initial-placeholder">
-                    <p>Welcome to Open Partners Safezone Checker!</p>
-                    <p class="small-text">Select a platform and format to get started.</p>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
 
     <footer>
