@@ -2,7 +2,7 @@
 /* --- 1. GLOBAL STYLES & BRANDING (DARK MODE/GOLD) --- */
 /* ------------------------------------------- */
 :root {
-    --brand-primary: #FFC600;      /* Vibrant Gold/Yellow */
+    --brand-primary: #fff518;      /* Vibrant Gold/Yellow */
     --background-dark: #1e1e1e;    /* Deep black/dark grey background */
     --background-sidebar: #282828; /* Slightly lighter dark for sidebar */
     --color-text-light: #f5f5f5;   /* Light text for contrast */
@@ -10,6 +10,7 @@
     --color-border: #404040;       /* Soft dark border/separator */
     --color-white: #FFFFFF;        /* Pure white for header/accents */
     --radius-large: 15px;          /* Corner radius */
+    --radius-small: 8px;           /* Button/Chip radius */
 }
 
 body {
@@ -36,10 +37,8 @@ header {
 }
 
 .header-logo {
-    /* The SVG is often dark, so it will look good against the white header */
-    width: 120px; 
+    width: 200px; 
     height: auto;
-    /* Removed display:block to keep it in line with h1 */
 }
 
 h1 {
@@ -57,7 +56,7 @@ h2 {
     text-transform: uppercase;
     font-size: 0.9em;
     letter-spacing: 1px;
-    border-bottom: 2px solid var(--brand-primary); /* Gold underline for modern touch */
+    border-bottom: 2px solid var(--brand-primary); /* Gold underline */
     padding-bottom: 10px;
 }
 
@@ -76,7 +75,6 @@ hr {
     margin: 30px auto;
     background: var(--background-dark);
     border-radius: var(--radius-large); 
-    /* Subtler dark mode shadow */
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); 
     min-height: 80vh;
     overflow: hidden; 
@@ -85,7 +83,7 @@ hr {
 #sidebar {
     width: 380px;
     padding: 35px;
-    background-color: var(--background-sidebar); /* Slightly lighter dark for contrast */
+    background-color: var(--background-sidebar);
     border-right: 1px solid var(--color-border);
 }
 
@@ -99,7 +97,7 @@ hr {
 }
 
 /* ------------------------------------------- */
-/* --- 3. FORM ELEMENTS --- */
+/* --- 3. FORM ELEMENTS & DROPDOWN --- */
 /* ------------------------------------------- */
 label {
     display: block;
@@ -123,6 +121,7 @@ select {
     background-color: var(--background-dark); 
     color: var(--color-text-light);
     appearance: none; /* Remove default arrow for modern look */
+    /* Custom SVG arrow */
     background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23aaaaaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
     background-repeat: no-repeat;
     background-position: right 15px top 50%;
@@ -146,15 +145,16 @@ select:focus {
     margin-bottom: 10px;
 }
 
-/* 3.B File Input Customization */
+/* --- 3.B FILE INPUT FIX --- */
 .upload-container {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 20px;
 }
+
+/* Hidden File Input */
 #image-upload {
-    /* Hide the default input button */
     opacity: 0;
     position: absolute;
     z-index: -1;
@@ -162,46 +162,30 @@ select:focus {
     height: 0.1px;
 }
 
-/* Custom "Browse..." button style */
-.upload-container label[for="image-upload"] {
-    display: inline-block;
+/* Custom "Browse..." button style applied to the label */
+.custom-upload-button {
+    display: inline-block !important;
     padding: 8px 15px;
     background-color: var(--brand-primary);
-    color: var(--text-primary);
+    color: var(--background-dark) !important;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: var(--radius-small); /* Smaller radius for buttons */
     font-size: 0.9em;
     font-weight: 700;
     text-transform: uppercase;
     transition: background-color 0.2s;
-    margin: 0; /* Override label margins */
+    margin: 0 !important;
 }
-.upload-container label[for="image-upload"]:hover {
+.custom-upload-button:hover {
     background-color: #ffda6a;
 }
+
 #file-status {
-    /* Style for the text showing file name */
     font-style: italic;
-    margin-top: 5px;
+    margin: 0;
     font-size: 0.85em;
     color: var(--color-text-muted);
 }
-/* This is a simple fix to display the word "Browse..." next to the input */
-.upload-container::before {
-    content: "Browse...";
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: var(--brand-primary);
-    color: var(--text-primary);
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 0.9em;
-    font-weight: 700;
-    text-transform: uppercase;
-    transition: background-color 0.2s;
-    margin-right: 10px;
-}
-
 
 /* --- 4. PLATFORM CHOICE CHIPS STYLING --- */
 .chip-container {
@@ -215,10 +199,10 @@ select:focus {
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
-    background-color: var(--background-dark); /* Dark chip body */
+    background-color: var(--background-dark);
     color: var(--color-text-light);
     border: 1px solid var(--color-border);
-    border-radius: 8px; /* Slightly less rounded than 15px for chips */
+    border-radius: var(--radius-small);
     transition: all 0.2s ease;
 }
 
@@ -229,7 +213,7 @@ select:focus {
 
 .platform-chip.selected {
     background-color: var(--brand-primary);
-    color: var(--text-primary); /* Dark text on gold background */
+    color: var(--background-dark); /* Dark text on gold background */
     border-color: var(--brand-primary);
     box-shadow: 0 0 5px rgba(255, 198, 0, 0.5);
 }
@@ -263,7 +247,7 @@ select:focus {
     width: 90%; 
     max-width: 750px; 
     aspect-ratio: 1/1; 
-    background-color: var(--background-sidebar); /* Dark preview box */
+    background-color: var(--background-sidebar);
     border: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
