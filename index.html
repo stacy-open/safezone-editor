@@ -7,19 +7,19 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <img src="https://images.teamtailor-cdn.com/images/s3/teamtailor-production/logotype-v3/image_uploads/97f27d19-8c33-4dc0-9cd8-bf881bfad289/original.png" alt="Open Partners Logo" class="header-logo">
+        <img src="https://open.partners/wp-content/uploads/2022/12/OP-Main-Logo.svg" alt="Open Partners Logo" class="header-logo">
         <h1>SafeZone Editor</h1>
     </header>
 
     <div id="container">
         <aside id="sidebar">
-            <h2>Editor Controls</h2>
+            <h2>EDITOR CONTROLS</h2>
             
             <label>1. Select Platform:</label>
             <div id="platform-chips" class="chip-container">
@@ -30,24 +30,31 @@
 
             <label for="format-select">2. Select Format:</label>
             <select id="format-select" disabled>
-                <option value="none">-- Select Format --</option>
+                <option value="none">Choose a format...</option>
             </select>
             
             <hr>
 
-            <label for="image-upload">3. Upload Your Image:</label>
-            <input type="file" id="image-upload" accept="image/*">
-            <p class="hint">Upload an image to see the safe zones.</p>
+            <label for="image-upload">3. Upload Image</label>
+            <div class="upload-container">
+                <input type="file" id="image-upload" accept="image/*">
+                <p id="file-status" class="hint">Upload an image to preview safe zones.</p>
+            </div>
+            
+            <button id="reset-button" class="reset-button">Reset Editor</button>
         </aside>
 
         <main id="editor-area">
             <div id="image-frame">
                 <img id="user-image" src="#" alt="Uploaded Image Preview" style="display: none;">
-                
                 <img id="safezone-overlay" src="" alt="Safe Zone Overlay" style="display: none;">
+                
+                <div id="initial-placeholder">
+                    <p>Upload an image to preview</p>
+                    <p class="small-text">Select a platform and format to get started</p>
+                </div>
             </div>
-            <p id="message">Select a platform/format and upload an image to begin.</p>
-        </main>
+            </main>
     </div>
 
     <footer>
