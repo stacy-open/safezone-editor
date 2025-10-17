@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ** 2. DEFINE USER-FRIENDLY NAMES (UNCHANGED) **
     const FORMAT_NAMES = {
-        'post-1x1': '1x1 Feed Post', // Changed Meta Post to Feed Post for generality
+        'post-1x1': '1x1 Feed Post',
         'post-4x5': '4x5 Feed Post',
         'reel-9x16': '9x16 Reel',
         'story-9x16': '9x16 Story',
@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         imageFrame.style.aspectRatio = '1/1';
         message.textContent = "Please select a platform and format.";
         message.style.display = 'block';
-        // Deselect all chips on full reset
         document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
     }
 
@@ -59,6 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
     platformChips.addEventListener('click', (e) => {
         const target = e.target.closest('.platform-chip');
         if (!target) return; // Not a chip button
+        
+        // ** THE CRITICAL FIX: STOP THE BUTTON'S DEFAULT ACTION (e.g., submitting a form) **
+        e.preventDefault(); 
 
         const platformKey = target.dataset.platform;
         
@@ -73,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formatSelect.innerHTML = '<option value="none">-- Select Format --</option>'; // Reset formats
         
         if (platformKey && OVERLAYS[platformKey]) {
-            formatSelect.disabled = false;
+            formatSelect.disabled = false; // <--- This line is now guaranteed to run
             for (const formatKey in OVERLAYS[platformKey]) {
                 const option = document.createElement('option');
                 option.value = formatKey;
