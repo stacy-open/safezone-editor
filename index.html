@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeZone Editor - Open Partners</title>
+    <title>SafeZone Checker - Open Partners</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,31 +14,34 @@
 <body>
     <header>
         <img src="https://open.partners/wp-content/uploads/2022/12/OP-Main-Logo.svg" alt="Open Partners Logo" class="header-logo">
-        <h1>SafeZone Editor</h1>
+        <h1>SafeZone Checker</h1>
     </header>
 
     <div id="container">
         <aside id="sidebar">
-            <h2>EDITOR CONTROLS</h2>
+            <h2>Safezone Checker Options</h2>
             
-            <label>1. Select Platform:</label>
+            <label>1. Select Your Platform:</label>
             <div id="platform-chips" class="chip-container">
                 <button class="platform-chip" data-platform="meta">Meta</button>
                 <button class="platform-chip" data-platform="tiktok">TikTok</button>
                 <button class="platform-chip" data-platform="youtube">YouTube</button>
             </div>
 
-            <label for="format-select">2. Select Format:</label>
+            <label for="format-select">2. Select Your Format:</label>
             <select id="format-select" disabled>
                 <option value="none">Choose a format...</option>
             </select>
             
             <hr>
 
-            <label for="image-upload">3. Upload Image</label>
+            <label>3. Upload Your Design:</label>
             <div class="upload-container">
+                <label for="image-upload" class="custom-upload-button">Browse...</label> 
+                
                 <input type="file" id="image-upload" accept="image/*">
-                <p id="file-status" class="hint">Upload an image to preview safe zones.</p>
+                
+                <p id="file-status" class="hint">No file selected.</p>
             </div>
             
             <button id="reset-button" class="reset-button">Reset Editor</button>
@@ -50,11 +53,11 @@
                 <img id="safezone-overlay" src="" alt="Safe Zone Overlay" style="display: none;">
                 
                 <div id="initial-placeholder">
-                    <p>Upload an image to preview</p>
-                    <p class="small-text">Select a platform and format to get started</p>
+                    <p>Welcome to Open Partners Safezone Checker!</p>
+                    <p class="small-text">Select a platform and format to get started.</p>
                 </div>
             </div>
-            </main>
+        </main>
     </div>
 
     <footer>
