@@ -13,7 +13,7 @@
 </head>
 <body>
     <header>
-        <img src="https://open.partners/wp-content/uploads/2022/12/OP-Main-Logo.svg" alt="Open Partners Logo" class="header-logo">
+        <img src="https://images.teamtailor-cdn.com/images/s3/teamtailor-production/logotype-v3/image_uploads/97f27d19-8c33-4dc0-9cd8-bf881bfad289/original.png" alt="Open Partners Logo" class="header-logo">
         <h1>SafeZone Editor</h1>
     </header>
 
@@ -21,13 +21,12 @@
         <aside id="sidebar">
             <h2>Editor Controls</h2>
             
-            <label for="platform-select">1. Select Platform:</label>
-            <select id="platform-select">
-                <option value="none">-- Select Platform --</option>
-                <option value="meta">Meta</option>
-                <option value="tiktok">TikTok</option>
-                <option value="youtube">YouTube</option>
-            </select>
+            <label>1. Select Platform:</label>
+            <div id="platform-chips" class="chip-container">
+                <button class="platform-chip" data-platform="meta">Meta</button>
+                <button class="platform-chip" data-platform="tiktok">TikTok</button>
+                <button class="platform-chip" data-platform="youtube">YouTube</button>
+            </div>
 
             <label for="format-select">2. Select Format:</label>
             <select id="format-select" disabled>
@@ -52,7 +51,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 Open Partners. All rights reserved.</p>
+        <p>&copy; 2025 Open Partners. All rights reserved.</p>
     </footer>
 
     <script src="script.js"></script>
