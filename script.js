@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const platformChips = document.getElementById('platform-chips');
     const formatSelect = document.getElementById('format-select');
     const imageUpload = document.getElementById('image-upload');
-    const userImage = document.getElementById('user-image');
-    const safezoneOverlay = document.getElementById('safezone-overlay');
     const imageFrame = document.getElementById('image-frame');
+    const mediaContainer = document.getElementById('media-container');
+    const safezoneOverlay = document.getElementById('safezone-overlay');
     const resetButton = document.getElementById('reset-button');
     const initialPlaceholder = document.getElementById('initial-placeholder');
     const fileStatusText = document.getElementById('file-status');
@@ -13,9 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Internal State
     let currentPlatform = null;
     let currentFormat = null;
-    let imageLoaded = false;
+    let mediaLoaded = false;
+    let userMediaElement = null; // Reference to the current <img> or <video>
 
-    // ** 1. DEFINE OVERLAY MAPPING (CRITICAL: CUSTOMIZE FILE NAMES HERE!) **
+    // ** 1. DEFINE OVERLAY MAPPING (UNCHANGED) **
     const OVERLAYS = {
         'meta': { 
             'post-1x1': { file: 'meta_feed_1x1.png', ratio: '1/1' },
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     };
 
-    // ** 2. DEFINE USER-FRIENDLY NAMES **
+    // ** 2. DEFINE USER-FRIENDLY NAMES (UNCHANGED) **
     const FORMAT_NAMES = {
         'post-1x1': '1x1 Feed Post',
         'post-4x5': '4x5 Feed Post',
@@ -47,9 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Core Functions ---
 
-    /**
-     * Updates the text next to the upload button to show file name or default status.
-     */
     function updateFileStatus(fileName = null) {
         if (fileName && fileName !== 'No file selected.') {
             fileStatusText.textContent = fileName;
@@ -59,6 +57,34 @@ document.addEventListener('DOMContentLoaded', () => {
             fileStatusText.style.color = 'var(--color-text-muted)';
         }
     }
+    
+    /**
+     * Creates and inserts the correct media element (img or video).
+     */
+    function insertMediaElement(mediaUrl, isVideo) {
+        // 1. Remove any existing media element
+        mediaContainer.innerHTML = '';
+        
+        // 2. Create the new element
+        const tagName = isVideo ? 'video' : 'img';
+        const newElement = document.createElement(tagName);
+        newElement.src = mediaUrl;
+        newElement.className = 'user-media'; // Apply common styling class
+        newElement.style.display = 'none';
+        
+        // 3. Set video-specific attributes
+        if (isVideo) {
+            // These attributes ensure videos play automatically and loop on mobile devices
+            newElement.setAttribute('autoplay', 'true');
+            newElement.setAttribute('loop', 'true');
+            newElement.setAttribute('muted', 'true');
+            newElement.setAttribute('playsinline', 'true'); 
+        }
+
+        // 4. Insert into the container
+        mediaContainer.appendChild(newElement);
+        userMediaElement = newElement;
+    }
 
     /**
      * Clears all selections, uploaded data, and returns the UI to its initial state.
@@ -67,11 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Reset Internal State
         currentPlatform = null;
         currentFormat = null;
-        imageLoaded = false;
+        mediaLoaded = false;
         
-        // 2. Clear Image Data & UI
-        userImage.src = '#';
-        userImage.style.display = 'none';
+        // 2. Clear Media Element from DOM
+        if (userMediaElement) {
+            userMediaElement.remove();
+            userMediaElement = null;
+        }
         safezoneOverlay.style.display = 'none';
         
         // 3. Reset Controls
@@ -79,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formatSelect.innerHTML = '<option value="none">Choose a format...</option>';
         formatSelect.disabled = true;
         
-        // Clears the file input field and resets the status text
         imageUpload.value = ''; 
         updateFileStatus(); 
 
@@ -89,32 +116,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Updates the preview based on current state (image, platform, format).
+     * Updates the preview based on current state (media, platform, format).
      */
     function updatePreview() {
-        if (!imageLoaded) {
-            userImage.style.display = 'none';
+        // Ensure media element exists before trying to access it
+        if (!mediaLoaded || !userMediaElement) {
             safezoneOverlay.style.display = 'none';
             initialPlaceholder.style.display = 'block';
             return;
         }
+        
+        // Ensure media is paused/played correctly
+        if (userMediaElement.tagName === 'VIDEO') {
+             // Attempt to play the video (required for some browsers)
+             userMediaElement.play().catch(e => console.log("Video playback blocked:", e)); 
+        }
 
         if (currentPlatform && currentFormat && currentFormat !== 'none') {
-            // Fully ready: Show image with overlay
+            // Fully ready: Show media with overlay
             const overlayData = OVERLAYS[currentPlatform][currentFormat];
             
             imageFrame.style.aspectRatio = overlayData.ratio;
             safezoneOverlay.src = `overlays/${overlayData.file}`;
             
             safezoneOverlay.style.display = 'block';
-            userImage.style.display = 'block';
+            userMediaElement.style.display = 'block';
             initialPlaceholder.style.display = 'none'; 
 
         } else {
-            // Image is loaded, but platform/format is missing
+            // Media is loaded, but platform/format is missing
             safezoneOverlay.style.display = 'none';
-            userImage.style.display = 'block';
-            // Show placeholder to prompt user to select a format
+            userMediaElement.style.display = 'block'; 
             initialPlaceholder.style.display = 'block'; 
         }
     }
@@ -126,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = e.target.closest('.platform-chip');
         if (!target) return;
         
-        e.preventDefault();
+        e.preventDefault(); 
         
         const platformKey = target.dataset.platform;
         
@@ -162,23 +194,23 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePreview();
     });
 
-    // Image Upload
+    // Media Upload (Handles Image OR Video)
     imageUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
+            const isVideo = file.type.startsWith('video/');
+            
             reader.onload = (event) => {
-                userImage.src = event.target.result;
-                imageLoaded = true;
+                // Insert the correct media element into the DOM
+                insertMediaElement(event.target.result, isVideo);
+                mediaLoaded = true;
                 updateFileStatus(file.name);
                 updatePreview();
             };
             reader.readAsDataURL(file);
         } else {
-            imageLoaded = false;
-            userImage.src = '#';
-            updateFileStatus();
-            updatePreview();
+            resetEditor(); // Use resetEditor for a clean state if file is removed
         }
     });
     
