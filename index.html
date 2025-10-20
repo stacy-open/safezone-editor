@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeZone Checker - Open Partners</title>
+    <title>OpenFrame</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,32 +21,32 @@
         <div id="page-content">
             <div id="container">
                 <aside id="sidebar">
-                    <h2>SafeZone Checker Options</h2>
+                    <h2>Controls</h2>
                     
-                    <label>1. Select Platform:</label>
+                    <label>1. Select Your Platform:</label>
                     <div id="platform-chips" class="chip-container">
                         <button class="platform-chip" data-platform="meta">Meta</button>
                         <button class="platform-chip" data-platform="tiktok">TikTok</button>
                         <button class="platform-chip" data-platform="youtube">YouTube</button>
                     </div>
 
-                    <label for="format-select">2. Select Format:</label>
+                    <label for="format-select">2. Select Your Format:</label>
                     <select id="format-select" disabled>
                         <option value="none">Choose a format...</option>
                     </select>
                     
                     <hr>
 
-                    <label>3. Upload Your Design:</label>
+                    <label>3. Upload Your Content:</label>
                     <div class="upload-container">
-                        <label for="image-upload" class="custom-upload-button">Browse...</label> 
+                        <label for="image-upload" class="custom-upload-button">Upload Content...</label> 
                         
                         <input type="file" id="image-upload" accept="image/*,video/*">
                         
-                        <p id="file-status" class="hint file-truncate">No file selected.</p>
+                        <p id="file-status" class="hint file-truncate">Please select your file.</p>
                     </div>
                     
-                    <button id="reset-button" class="reset-button">Reset Editor</button>
+                    <button id="reset-button" class="reset-button">Reset OpenFrame</button>
                 </aside>
 
                 <main id="editor-area">
@@ -57,8 +57,8 @@
                         <img id="safezone-overlay" src="" alt="Safe Zone Overlay" style="display: none;">
                         
                         <div id="initial-placeholder">
-                            <p>Upload an image or video to preview</p>
-                            <p class="small-text">Select a platform and format to get started</p>
+                            <p>Welcome to OpenFrame!</p>
+                            <p class="small-text">Select a platform and format to get started.</p>
                         </div>
                     </div>
                 </main>
