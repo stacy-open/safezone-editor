@@ -41,24 +41,23 @@ header {
     padding: 15px 20px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* STYLED FOR VERTICAL STACK */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px; /* Reduced gap */
+    gap: 5px;
 }
 
 .header-logo {
-    width: 150px; /* Adjusted size for vertical stack */
+    width: 150px; 
     height: auto;
-    margin: 0; /* Clear margin */
+    margin: 0; 
 }
 
 h1 {
     font-weight: 600;
     margin: 0;
-    font-size: 1.3em; /* Slightly smaller to fit better */
+    font-size: 1.3em; 
     color: var(--background-dark); 
 }
 
@@ -107,7 +106,7 @@ hr {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Aligned to the top of the main area */
+    justify-content: flex-start;
 }
 
 /* ------------------------------------------- */
@@ -223,7 +222,6 @@ select:focus {
     border-radius: var(--radius-small);
     transition: all 0.2s ease;
     
-    /* STYLED FOR ICON */
     display: flex;
     align-items: center;
     gap: 6px;
@@ -231,7 +229,9 @@ select:focus {
 .chip-icon {
     width: 16px;
     height: 16px;
-    filter: invert(1); /* Ensure SVG icon is visible on dark background */
+    /* FIX: Invert filter to make icon WHITE when INACTIVE (dark background) */
+    filter: invert(1); 
+    transition: filter 0.2s;
 }
 
 .platform-chip:hover {
@@ -246,7 +246,8 @@ select:focus {
     box-shadow: 0 0 5px rgba(255, 198, 0, 0.5);
 }
 .platform-chip.selected .chip-icon {
-    filter: none; /* Ensure icon is its original color or default dark on gold */
+    /* FIX: Remove filter to make icon BLACK when ACTIVE (gold background) */
+    filter: none; 
 }
 
 /* --- RESET BUTTON --- */
@@ -289,7 +290,6 @@ select:focus {
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
     min-height: 400px;
     
-    /* Added margin to separate frame from controls */
     margin-bottom: 15px; 
 }
 
@@ -357,9 +357,10 @@ select:focus {
 }
 
 .control-icon {
-    width: 28px;
-    height: 28px;
-    filter: invert(1); /* Make the icons white/light */
+    /* FIX: Make icons larger and white */
+    width: 32px; /* Increased size */
+    height: 32px; /* Increased size */
+    filter: invert(1); /* Make the icons WHITE on the dark background */
     transition: opacity 0.2s, transform 0.1s;
 }
 
