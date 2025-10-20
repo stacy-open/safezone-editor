@@ -10,6 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialPlaceholder = document.getElementById('initial-placeholder');
     const fileStatusText = document.getElementById('file-status');
     
+    // Video Controls
+    const videoControls = document.getElementById('video-controls');
+    const playPauseButton = document.getElementById('play-pause-button');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
+    const muteButton = document.getElementById('mute-button');
+    const muteIcon = document.querySelector('#mute-button .mute-icon');
+    
     // Internal State
     let currentPlatform = null;
     let currentFormat = null;
@@ -69,19 +77,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const tagName = isVideo ? 'video' : 'img';
         const newElement = document.createElement(tagName);
         newElement.src = mediaUrl;
-        newElement.className = 'user-media'; // Apply common styling class
+        newElement.className = 'user-media'; 
         newElement.style.display = 'none';
         
         // 3. Set video-specific attributes
         if (isVideo) {
-            // These attributes ensure videos play automatically and loop on mobile devices
             newElement.setAttribute('autoplay', 'true');
             newElement.setAttribute('loop', 'true');
             newElement.setAttribute('muted', 'true');
             newElement.setAttribute('playsinline', 'true'); 
         }
 
-        // 4. Insert into the container
+        // 4. Insert into the container and update reference
         mediaContainer.appendChild(newElement);
         userMediaElement = newElement;
     }
@@ -95,41 +102,77 @@ document.addEventListener('DOMContentLoaded', () => {
         currentFormat = null;
         mediaLoaded = false;
         
-        // 2. Clear Media Element from DOM
+        // 2. Clear Media Element from DOM and hide controls
         if (userMediaElement) {
             userMediaElement.remove();
             userMediaElement = null;
         }
         safezoneOverlay.style.display = 'none';
+        videoControls.style.display = 'none'; // Hide controls on reset
         
-        // 3. Reset Controls
+        // 3. Reset Controls (Chips, Dropdown, File Input)
         document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
         formatSelect.innerHTML = '<option value="none">Choose a format...</option>';
         formatSelect.disabled = true;
         
         imageUpload.value = ''; 
         updateFileStatus(); 
+        
+        // Reset Video Controls State
+        playPauseButton.dataset.state = 'pause'; // Sets initial state to pause (ready to play)
+        togglePlayPauseIcon(true);
+        toggleMuteIcon(true);
+        muteButton.dataset.muted = 'true';
 
         // 4. Reset Preview to Placeholder
         imageFrame.style.aspectRatio = '1/1';
         initialPlaceholder.style.display = 'block';
+    }
+    
+    // --- Video Control Logic ---
+
+    function togglePlayPauseIcon(setToPlayIcon) {
+        if (setToPlayIcon) {
+            playPauseButton.dataset.state = 'play';
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
+        } else {
+            playPauseButton.dataset.state = 'pause';
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+        }
+    }
+    
+    function toggleMuteIcon(isMuted) {
+        if (isMuted) {
+            muteIcon.classList.add('inactive');
+            muteButton.dataset.muted = 'true';
+        } else {
+            muteIcon.classList.remove('inactive');
+            muteButton.dataset.muted = 'false';
+        }
     }
 
     /**
      * Updates the preview based on current state (media, platform, format).
      */
     function updatePreview() {
-        // Ensure media element exists before trying to access it
         if (!mediaLoaded || !userMediaElement) {
             safezoneOverlay.style.display = 'none';
             initialPlaceholder.style.display = 'block';
+            videoControls.style.display = 'none';
             return;
         }
         
-        // Ensure media is paused/played correctly
-        if (userMediaElement.tagName === 'VIDEO') {
-             // Attempt to play the video (required for some browsers)
-             userMediaElement.play().catch(e => console.log("Video playback blocked:", e)); 
+        const isVideo = userMediaElement.tagName === 'VIDEO';
+        
+        // Show/hide video controls
+        videoControls.style.display = isVideo ? 'flex' : 'none';
+        
+        if (isVideo) {
+            // Attempt to play the video (fixes playback issues)
+            userMediaElement.play().catch(e => console.log("Video playback blocked:", e));
+            togglePlayPauseIcon(false); // Always show pause icon initially after load/update
         }
 
         if (currentPlatform && currentFormat && currentFormat !== 'none') {
@@ -153,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
 
-    // Platform Selection (Chip Buttons)
+    // Platform Selection (Chip Buttons) - UNCHANGED LOGIC
     platformChips.addEventListener('click', (e) => {
         const target = e.target.closest('.platform-chip');
         if (!target) return;
@@ -188,13 +231,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePreview();
     });
     
-    // Format Selection (Dropdown)
+    // Format Selection (Dropdown) - UNCHANGED LOGIC
     formatSelect.addEventListener('change', (e) => {
         currentFormat = e.target.value;
         updatePreview();
     });
 
-    // Media Upload (Handles Image OR Video)
+    // Media Upload (Handles Image OR Video) - UNCHANGED LOGIC
     imageUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -210,11 +253,33 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(file);
         } else {
-            resetEditor(); // Use resetEditor for a clean state if file is removed
+            resetEditor();
         }
     });
     
-    // Reset Button Event Listener
+    // Video Controls Listeners
+    playPauseButton.addEventListener('click', () => {
+        if (!userMediaElement || userMediaElement.tagName !== 'VIDEO') return;
+
+        if (userMediaElement.paused) {
+            userMediaElement.play();
+            togglePlayPauseIcon(false); // Show Pause icon
+        } else {
+            userMediaElement.pause();
+            togglePlayPauseIcon(true); // Show Play icon
+        }
+    });
+
+    muteButton.addEventListener('click', () => {
+        if (!userMediaElement || userMediaElement.tagName !== 'VIDEO') return;
+
+        const isMuted = userMediaElement.muted;
+        userMediaElement.muted = !isMuted;
+        
+        toggleMuteIcon(!isMuted);
+    });
+
+    // Reset Button Event Listener - UNCHANGED LOGIC
     resetButton.addEventListener('click', resetEditor);
 
     // Initialize state on page load
