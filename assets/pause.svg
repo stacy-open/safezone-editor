@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 512 512">
+  <!-- Generator: Adobe Illustrator 29.8.2, SVG Export Plug-In . SVG Version: 2.1.1 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+    <path class="st0" d="M145.3,0h221.39c79.92,0,145.3,65.38,145.3,145.3v221.39c0,79.92-65.39,145.3-145.3,145.3h-221.39C65.38,512,0,446.62,0,366.7v-221.39C0,65.38,65.38,0,145.3,0ZM181.39,158.25h42.43c5.66,0,10.29,4.69,10.29,10.3v174.9c0,5.61-4.69,10.3-10.29,10.3h-42.43c-5.61,0-10.3-4.63-10.3-10.3v-174.9c0-5.66,4.63-10.3,10.3-10.3ZM288.18,158.25h42.43c5.67,0,10.3,4.68,10.3,10.3v174.9c0,5.62-4.68,10.3-10.3,10.3h-42.43c-5.62,0-10.3-4.63-10.3-10.3v-174.9c0-5.66,4.63-10.3,10.3-10.3Z"/>
+  </g>
+</svg>
