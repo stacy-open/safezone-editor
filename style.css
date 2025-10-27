@@ -360,7 +360,7 @@ select:focus {
     /* FIX: Make icons larger and white */
     width: 32px; /* Increased size */
     height: 32px; /* Increased size */
-    filter: invert(1); /* Make the icons WHITE on the dark background */
+    /* filter: invert(1);  Make the icons WHITE on the dark background */
     transition: opacity 0.2s, transform 0.1s;
 }
 
