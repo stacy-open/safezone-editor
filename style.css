@@ -230,8 +230,8 @@ select:focus {
     width: 16px;
     height: 16px;
     /* FIX: Invert filter to make icon WHITE when INACTIVE (dark background) */
-    filter: invert(1); 
-    transition: filter 0.2s;
+    /* filter: invert(1); */
+    /* transition: filter 0.2s; */
 }
 
 .platform-chip:hover {
