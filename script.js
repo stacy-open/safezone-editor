@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mediaLoaded = false;
     let userMediaElement = null; // Reference to the current <img> or <video>
 
-    // ** 1. DEFINE OVERLAY MAPPING (UNCHANGED) **
+    // ** 1. DEFINE OVERLAY MAPPING **
     const OVERLAYS = {
         'meta': { 
             'post-1x1': { file: 'meta_feed_1x1.png', ratio: '1/1' },
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     };
 
-    // ** 2. DEFINE USER-FRIENDLY NAMES (UNCHANGED) **
+    // ** 2. DEFINE USER-FRIENDLY NAMES **
     const FORMAT_NAMES = {
         'post-1x1': '1x1 Feed Post',
         'post-4x5': '4x5 Feed Post',
@@ -113,13 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. Reset Controls (Chips, Dropdown, File Input)
         document.querySelectorAll('.platform-chip').forEach(chip => chip.classList.remove('selected'));
         formatSelect.innerHTML = '<option value="none">Choose a format...</option>';
+        formatSelect.value = 'none';
         formatSelect.disabled = true;
         
         imageUpload.value = ''; 
         updateFileStatus(); 
         
         // Reset Video Controls State
-        playPauseButton.dataset.state = 'pause'; // Sets initial state to pause (ready to play)
+        playPauseButton.dataset.state = 'play'; // Sets initial state to pause (ready to play)
         togglePlayPauseIcon(true);
         toggleMuteIcon(true);
         muteButton.dataset.muted = 'true';
@@ -155,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Updates the preview based on current state (media, platform, format).
+     * FIX: Corrected placeholder visibility logic.
      */
     function updatePreview() {
         if (!mediaLoaded || !userMediaElement) {
@@ -184,19 +186,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             safezoneOverlay.style.display = 'block';
             userMediaElement.style.display = 'block';
-            initialPlaceholder.style.display = 'none'; 
-
+            initialPlaceholder.style.display = 'none'; // <-- HIDE PLACEHOLDER
         } else {
-            // Media is loaded, but platform/format is missing
+            // Media is loaded, but platform/format is missing or 'none'
             safezoneOverlay.style.display = 'none';
-            userMediaElement.style.display = 'block'; 
-            initialPlaceholder.style.display = 'block'; 
+            userMediaElement.style.display = 'block'; // <-- SHOW MEDIA
+            initialPlaceholder.style.display = 'block'; // <-- SHOW PLACEHOLDER (for instructions)
         }
     }
 
     // --- Event Listeners ---
 
-    // Platform Selection (Chip Buttons) - UNCHANGED LOGIC
+    // Platform Selection (Chip Buttons)
     platformChips.addEventListener('click', (e) => {
         const target = e.target.closest('.platform-chip');
         if (!target) return;
@@ -231,13 +232,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePreview();
     });
     
-    // Format Selection (Dropdown) - UNCHANGED LOGIC
+    // Format Selection (Dropdown)
     formatSelect.addEventListener('change', (e) => {
         currentFormat = e.target.value;
         updatePreview();
     });
 
-    // Media Upload (Handles Image OR Video) - UNCHANGED LOGIC
+    // Media Upload (Handles Image OR Video)
     imageUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -279,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleMuteIcon(!isMuted);
     });
 
-    // Reset Button Event Listener - UNCHANGED LOGIC
+    // Reset Button Event Listener
     resetButton.addEventListener('click', resetEditor);
 
     // Initialize state on page load
